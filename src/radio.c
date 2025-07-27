@@ -1,5 +1,8 @@
 
+
+#include "pico/stdlib.h"
 #include "radio.h"
+#include "debugging.h"
 
 void busyWait(){while(gpio_get(BUSY));}
 
@@ -9,9 +12,37 @@ void standBy(){
   gpio_put(CS,1);
   busyWait();}
 
+void clearIrq(){
+  gpio_put(CS,0);
+  spi_write_blocking(spi1,CLEARIRQ,sizeof(CLEARIRQ));
+  gpio_put(CS,1); busyWait();
+}
+
+uint8_t checkIrq(){
+  uint8_t buff[10];
+  
+  if(gpio_get(DIO_1) == 0) return NOIRQ;
+  
+  gpio_put(CS,0);
+  spi_write_read_blocking(spi1,GETIRQSTATUS,buff,sizeof(GETIRQSTATUS));
+  gpio_put(CS,1);
+  
+  if(buff[3] == TRANSMITCOMPLETED) return TRANSMITCOMPLETED;
+  
+  if(buff[3] == PACKETRECEIVED) return PACKETRECEIVED;
+  
+  if(buff[3] == PREAMBLEDETECTED) return PREAMBLEDETECTED;
+  
+  return buff[3];
+}
+
+
+
 void transmit(uint8_t *data, int dataLen){
 
   uint8_t buff[32];
+
+//printf("transmitting...\r\n");
 
   standBy();
   
@@ -49,52 +80,37 @@ void setModeReceive(){
 
 }
 
-int lora_receive_async(uint8_t* receivedData, int dataLength){
-
-  uint8_t buff[32];
-  uint8_t payloadLength;
-  uint8_t startAddress;
-  
-  //testing if DIO_1 vs irq status on receiving packet
-  //seems depending on the speed of transmitting
-  //testing DIO_1 is better with avoiding duplicate packets
-  
-  //testing receiving packet
-  //one is check irq status register for packet received
+//receivve function
+//process received data in this fuction
+//do not pass to main
+void receive(){
+uint8_t rx_buffer_status[4];
+uint8_t data[255];
  
-  //check irq status for received packet
-  //we received multiple times sometimes same packet twice or 3 times
-  //gpio_put(CS,0);
-  //spi_write_read_blocking(spi1,GETIRQSTATUS,buff,sizeof(GETIRQSTATUS));
-  //gpio_put(CS,1); busyWait();
-  //if(!buff[3] & PACKETRECEIVED) return -1;
+if (getIrqLsb() & PACKETRECEIVED){
+  clearIrq();
   
-  //testing receiving packet
-  //one is check DIO_1 pin
-  
-  if(gpio_get(DIO_1) == 0){return -1;}//no received data
-  
-  gpio_put(CS,0);
-  spi_write_blocking(spi1,CLEARIRQ,sizeof(CLEARIRQ));
+  gpio_put(CS,0); spi_write_read_blocking(spi1,GETRXBUFFERSTATUS,rx_buffer_status,sizeof(GETRXBUFFERSTATUS));
   gpio_put(CS,1); busyWait();
   
-  //find buffer received data length
-  //find buffer offset address of received data
-  gpio_put(CS,0);
-  spi_write_read_blocking(spi1,GETRXBUFFERSTATUS,buff,sizeof(GETRXBUFFERSTATUS));
-  gpio_put(CS,1); busyWait();
-  
-  payloadLength = buff[2];
-  startAddress  = buff[3];
-  
-  buff[0] = OPCODE_READBUFFER;
-  buff[1] = startAddress;
-  buff[2] = NOP;
-  
-  gpio_put(CS,0);
-  spi_write_blocking(spi1,buff,3);
-  spi_read_blocking(spi1,NOP,receivedData,payloadLength);
-  gpio_put(CS,1); busyWait();
-  return payloadLength;
+  uint8_t length = rx_buffer_status[2];
+  uint8_t offset = rx_buffer_status[3];
+
+  if(length > 0){
+    rx_buffer_status[0] = OPCODE_READBUFFER;
+    rx_buffer_status[1] = offset;
+    rx_buffer_status[2] = NOP;
+    gpio_put(CS,0);
+    spi_write_blocking(spi1,rx_buffer_status,3);
+    spi_read_blocking(spi1,NOP,data,length);
+    gpio_put(CS,1); busyWait();
+    
+    if(length > 0){
+      printf("data: %s\r\n",(char *) data);
+    }
+  }
+} else printf("no packet received\r\n");
+
+sleep_ms(900);
   
 }

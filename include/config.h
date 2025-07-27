@@ -2,8 +2,11 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define NOP 0x00
-#define PACKETRECEIVED 0x02
+#define NOP               0x00
+#define TRANSMITCOMPLETED 0x01
+#define PACKETRECEIVED    0x02
+#define PREAMBLEDETECTED  0x04
+#define NOIRQ             0x00
 
 //getirqstatus
 //table 13-30

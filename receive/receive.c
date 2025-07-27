@@ -12,18 +12,10 @@ uint8_t buff[255];
 void main(){
 
   stdio_init_all(); sleep_ms(3000);
-  
   if(init_board() > 0) printf("board init...\r\n");
   sleep_ms(3000);
   init_board();     sleep_ms(3000);
-  
   setModeReceive();
   
-  //setModeReceive();
   for(;;){
-    //printf("irq lsb 2=receive: %X\r\n",getIrqLsb());
-    //printf("irq msb: %X\r\n",getIrqMsb());
-    int bytesRead = lora_receive_async(buff,sizeof(buff));
-    if(bytesRead > -1) printf("data: %s\r\n",buff);
-    sleep_ms(500);
-}}
+    receive();}}

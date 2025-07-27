@@ -1,5 +1,7 @@
 
 
+// init sequence from https://github.com/thekakester/Arduino-LoRa-Sx1262/blob/main/src/LoraSx1262.cpp
+
 #include "initialize.h"
 
 int init_board(){
