@@ -1,3 +1,5 @@
 receive/build
 transmit/build
 pingpong/build
+uart/build
+

@@ -69,7 +69,7 @@
 //param4 - payload length for transmit table 13-68 or 0xFF max for receive
 //param5 - crc type
 //param6 - invert iq
-#define SETTXPACKETPARAM (uint8_t[]){OPCODE_PACKETPARAMS,0x00,0x0C,0x00,0x07,0x00,0x00}
+#define SETTXPACKETPARAM (uint8_t[]){OPCODE_PACKETPARAMS,0x00,0x0C,0x00,0x40,0x00,0x00}
 #define SETRXPACKETPARAM (uint8_t[]){OPCODE_PACKETPARAMS,0x00,0x0C,0x00,0xFF,0x00,0x00}
 //#define SETRXPACKETPARAM (uint8_t[]){OPCODE_RXPACKETPARAM,0x00,0x08,0x00,0xFF,0x00,0x00}
 
@@ -79,7 +79,7 @@
 
 #define OPCODE_TXPARAM22 0x8E
 //param 22 - power
-//param 2 - ramp_40u
+//param 2 - ramp_40
 #define SETTXPARAMS22 (uint8_t[]){OPCODE_TXPARAM22, 22, 2}
 
 //pa config taken from https://github.com/thekakester/Arduino-LoRa-Sx1262/blob/main/src/LoraSx1262.cpp
