@@ -3,6 +3,7 @@
 #include "pico/stdlib.h"
 #include "radio.h"
 #include "debugging.h"
+#include "process.h"
 
 void busyWait(){while(gpio_get(BUSY));}
 
@@ -106,11 +107,12 @@ if (getIrqLsb() & PACKETRECEIVED){
     gpio_put(CS,1); busyWait();
     
     if(length > 0){
-      printf("data: %s\r\n",(char *) data);
+	  process_string(data);
+      //printf("data: %s\r\n",(char *) data);
     }
   }
-} else printf("no packet received\r\n");
+} //else printf("no packet received\r\n");
 
-sleep_ms(900);
+//sleep_ms(900);
   
 }

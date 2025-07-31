@@ -9,6 +9,7 @@ add_library(sx1262lib
   src/radio.c
   src/debugging.c
   mylib/ws2812.c
+  mylib/process.c
   )
 
 target_include_directories(sx1262lib PUBLIC  ${CMAKE_CURRENT_LIST_DIR}/include)

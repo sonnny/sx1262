@@ -18,4 +18,5 @@ void main(){
   setModeReceive();
   
   for(;;){
-    receive();}}
+    receive();
+    sleep_ms(50);}}
