@@ -1,5 +1,6 @@
 //process.c
-
+//expects commands
+// FW4, FW3, FW2, FW1, STOP, BACK, LEFT, RIGHT
 #include "process.h"
 
 void process_string(char *str){
