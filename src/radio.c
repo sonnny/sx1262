@@ -42,9 +42,6 @@ uint8_t checkIrq(){
 void transmit(uint8_t *data, int dataLen){
 
   uint8_t buff[32];
-
-//printf("transmitting...\r\n");
-
   standBy();
   
   gpio_put(CS,0);
@@ -66,9 +63,7 @@ void transmit(uint8_t *data, int dataLen){
   gpio_put(CS,0);
   spi_write_blocking(spi1,SETTX,sizeof(SETTX));
   gpio_put(CS,1);
-  busyWait();
-
-}
+  busyWait();}
 
 void setModeReceive(){
   gpio_put(CS,0);
@@ -77,13 +72,8 @@ void setModeReceive(){
   
   gpio_put(CS,0);
   spi_write_blocking(spi1,SETRX,sizeof(SETRX));
-  gpio_put(CS,1); busyWait();
+  gpio_put(CS,1); busyWait();}
 
-}
-
-//receivve function
-//process received data in this fuction
-//do not pass to main
 void receive(){
 uint8_t rx_buffer_status[4];
 uint8_t data[255];
@@ -107,12 +97,4 @@ if (getIrqLsb() & PACKETRECEIVED){
     gpio_put(CS,1); busyWait();
     
     if(length > 0){
-	  process_string(data);
-      //printf("data: %s\r\n",(char *) data);
-    }
-  }
-} //else printf("no packet received\r\n");
-
-//sleep_ms(900);
-  
-}
+	  process_string(data);}}}}

@@ -8,7 +8,6 @@
 
 #include "initialize.h"
 #include "radio.h"
-#include "ws2812.h"
 
 char uart_buffer[100];
 int bufferIndex = 0;
@@ -27,15 +26,14 @@ void on_uart_rx(){
 
 
 void main(){
-stdio_init_all(); sleep_ms(3000);
-ws2812_init();
+stdio_init_all(); sleep_ms(2000);
 
 if(init_board() > 0) printf("board init...\r\n");
-sleep_ms(3000);
-
-gpio_set_function(TX_PIN,UART_FUNCSEL_NUM(uart1,TX_PIN));
-gpio_set_function(RX_PIN,UART_FUNCSEL_NUM(uart1,RX_PIN));
+sleep_ms(1000);
 uart_init(uart1,115200);
+gpio_set_function(TX_PIN, GPIO_FUNC_UART);
+gpio_set_function(RX_PIN, GPIO_FUNC_UART);
+
 uart_set_hw_flow(uart1,false,false);//no hardware flow control
 uart_set_format(uart1,8,1,UART_PARITY_NONE);
 uart_set_fifo_enabled(uart1,false);//turn off fifo

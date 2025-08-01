@@ -10,5 +10,5 @@ void process_string(char *str){
   strcpy(args,strtok(NULL," "));
   printf("command: %s\r\n",command);
   printf("args: %s\r\n\n",args);
-  sleep_ms(1500);
+  sleep_ms(50);
 }
