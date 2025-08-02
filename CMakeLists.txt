@@ -9,6 +9,7 @@ add_library(sx1262lib
   src/radio.c
   src/debugging.c
   mylib/process.c
+  mylib/pwm.c
   )
 
 target_include_directories(sx1262lib PUBLIC  ${CMAKE_CURRENT_LIST_DIR}/include)
@@ -20,6 +21,7 @@ target_link_libraries(sx1262lib
   hardware_spi
   hardware_gpio
   hardware_clocks
+  hardware_pwm
   )
 
 

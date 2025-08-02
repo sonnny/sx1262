@@ -6,15 +6,16 @@
 #include "initialize.h"
 #include "radio.h"
 #include "debugging.h"
+#include "pwm.h"
 
 uint8_t buff[255];
 
 void main(){
 
-  stdio_init_all(); sleep_ms(3000);
+  stdio_init_all(); sleep_ms(1000);
+  init_pwm();
   if(init_board() > 0) printf("board init...\r\n");
-  sleep_ms(3000);
-  init_board();     sleep_ms(3000);
+  sleep_ms(1000);
   setModeReceive();
   
   for(;;){
