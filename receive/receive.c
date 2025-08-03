@@ -7,6 +7,7 @@
 #include "radio.h"
 #include "debugging.h"
 #include "pwm.h"
+#include "servo.h"
 
 uint8_t buff[255];
 
@@ -14,6 +15,7 @@ void main(){
 
   stdio_init_all(); sleep_ms(1000);
   init_pwm();
+  init_servo();
   if(init_board() > 0) printf("board init...\r\n");
   sleep_ms(1000);
   setModeReceive();

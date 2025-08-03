@@ -58,17 +58,23 @@ Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
 children: [
   IconButton(iconSize: 75, onPressed:(){send(LEFT);},
     icon: Icon(Icons.arrow_back_rounded)),
-  IconButton(iconSize: 75, onPressed:(){send(BACK);},
-    icon: Icon(Icons.arrow_circle_down)),
+  IconButton(iconSize: 75, onPressed:(){send(CENTER);},
+    icon: Icon(Icons.compare_arrows)),
   IconButton(iconSize: 75, onPressed:(){send(RIGHT);},
     icon: Icon(Icons.arrow_forward_rounded)),    
 ]),
 
-//5th row
-Padding(padding:EdgeInsets.all(20),
-child:ElevatedButton(child:Text('exit'),
-onPressed:() async {await device.disconnect();
-SystemNavigator.pop();}))
+// 5th row
+IconButton(iconSize: 75, onPressed:(){send(BACK);},
+icon: Icon(Icons.arrow_circle_down)),
+    
+//6th row
+IconButton(iconSize: 100, onPressed:() async {
+  send(STOP);
+  send(CENTER);
+  await device.disconnect();
+  SystemNavigator.pop();},
+  icon: Icon(Icons.power_settings_new))
            
 ]));}}
     

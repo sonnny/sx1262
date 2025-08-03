@@ -10,6 +10,7 @@ add_library(sx1262lib
   src/debugging.c
   mylib/process.c
   mylib/pwm.c
+  mylib/servo.c
   )
 
 target_include_directories(sx1262lib PUBLIC  ${CMAKE_CURRENT_LIST_DIR}/include)
