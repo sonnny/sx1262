@@ -1,0 +1,42 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:get/get.dart';
+
+const String BLE_ADDRESS = '9C:1D:58:0F:3B:D8';
+const String SERVICE     = 'FFE0';
+const String TX_CHAR     = 'FFE1';
+
+const List<int> FW4    = [0x46,0x57,0x34,0x20, 0x41,0x42,0x20,0x20, 0x0D];     //forward speed 4
+const List<int> FW3    = [0x46,0x57,0x33,0x20, 0x41,0x42,0x20,0x20, 0x0D];     //forward speed 3
+const List<int> FW2    = [0x46,0x57,0x32,0x20, 0x41,0x42,0x20,0x20, 0x0D];     //forward speed 2
+const List<int> FW1    = [0x46,0x57,0x31,0x20, 0x41,0x42,0x20,0x20, 0x0D];     //forward speed 1
+const List<int> STOP   = [0x53,0x54,0x4F,0x50,0x20, 0x41,0x42,0x20,0x20, 0x0D];//stop
+const List<int> BACK   = [0x42,0x41,0x43,0x4B,0x20, 0x41,0x42,0x20,0x20, 0x0D];//BACK
+const List<int> LEFT   = [0x4C,0x45,0x46,0x54,0x20, 0x41,0x42,0x20,0x20, 0x0D];//LEFT
+const List<int> RIGHT  = [0x52,0x49,0x47,0x48,0x54,0x20, 0x41,0x42,0x20,0x20, 0x0D];//RIGHT
+const List<int> CENTER = [0x43,0x45,0x4E,0x54,0x45,0x52, 0x20, 0x41,0x42, 0x20,0x20, 0x0D];//CENTER
+
+
+class BleController extends GetxController{
+
+var status = 'connect...'.obs;
+var tx;
+late BluetoothDevice device;  
+
+//connect function  
+void connect() async {
+device = BluetoothDevice(
+remoteId: DeviceIdentifier(BLE_ADDRESS));
+await device.connect(); //connect without bluetooth scan
+List<BluetoothService> services = await device.discoverServices();
+tx = BluetoothCharacteristic(remoteId: device.remoteId,
+serviceUuid: Guid(SERVICE),
+characteristicUuid: Guid(TX_CHAR));
+status.value = 'ready';}
+
+void send(List<int> data) async {
+try{await tx.write(data, withoutResponse: true);} catch(e){}}
+
+void disconnect() async { device.disconnect(); }
+  
+}

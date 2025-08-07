@@ -1,80 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import './globals.dart';
+import 'package:get/get.dart';
+import './ble_controller.dart';
 
-class Home extends StatefulWidget{
-  Home({super.key});
-  @override State<Home> createState() => HomeState();}
-  
-class HomeState extends State<Home>{
-  Key key = UniqueKey();
-  late BluetoothDevice device;
-  String? status = 'connect';
-  bool isConnected = false;
-  var tx;
-  
-  void send(List<int> data) async {
-    try{await tx.write(data, withoutResponse: true);} catch(e){}}
-      
-  void connect() async {
-    device = BluetoothDevice(
-    remoteId: DeviceIdentifier(BLE_ADDRESS));
-    await device.connect();//connect without bluetooth scan
-    List<BluetoothService> services = await device.discoverServices();
-    tx = BluetoothCharacteristic(remoteId: device.remoteId,
-      serviceUuid: Guid(SERVICE),
-      characteristicUuid: Guid(TX_CHAR));
-    setState((){status = 'ready'; 
-      isConnected = true;});}
-      
-@override Widget build(BuildContext context){
-return Scaffold(appBar: AppBar(title: Text('Ble boat rc')),
-body: Column(spacing: 30, children:[
+TextStyle connectedStyle = TextStyle(
+color:Colors.green,fontSize: 26,
+fontWeight:FontWeight.bold);
 
+TextStyle notConnectedStyle = TextStyle(color:Colors.red);
+
+TextStyle forwardStyle = TextStyle(
+color: Colors.blue, fontSize: 30,
+fontWeight: FontWeight.bold);
+
+class Home extends StatelessWidget{
+
+  final ble = Get.put(BleController());
+  
+  @override Widget build(BuildContext context){
+    return Scaffold(
+      appBar: AppBar(title: Text('ble rc boat')),
+      body: Column(spacing: 30, mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+     
 //1st row
-Row(mainAxisAlignment: MainAxisAlignment.spaceAround, 
-  children: [     
-    Text('address: ${BLE_ADDRESS}'),
-    ElevatedButton(child:Text('${status}',
-      style: isConnected ? connectedStyle : 
-      notConnectedStyle), onPressed:() => connect())]),
+GetX<BleController>(
+builder:(_) { return Row( mainAxisAlignment: MainAxisAlignment.spaceAround, 
+children: [ 
+Text('address: ${BLE_ADDRESS}'),
+ElevatedButton(child: Text('${ble.status}',
+style: (ble.status == 'ready') ? connectedStyle : 
+notConnectedStyle), onPressed:() => ble.connect())
+]);}),
 
 //2nd row
 Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
 children: [
-  ElevatedButton(child: Text('<<<<',style: forwardStyle), onPressed:(){send(FW4);}),
-  ElevatedButton(child: Text('<<<',style: forwardStyle), onPressed:(){ send(FW3);}),
-  ElevatedButton(child: Text('<<',style: forwardStyle), onPressed:(){  send(FW2);}),
-  ElevatedButton(child: Text('<', style: forwardStyle), onPressed:(){   send(FW1);})]),
+  ElevatedButton(child: Text('<<<<',style: forwardStyle), onPressed:(){ ble.send(FW4);}),
+  ElevatedButton(child: Text('<<<',style: forwardStyle), onPressed:(){  ble.send(FW3);}),
+  ElevatedButton(child: Text('<<',style: forwardStyle), onPressed:(){   ble.send(FW2);}),
+  ElevatedButton(child: Text('<', style: forwardStyle), onPressed:(){   ble.send(FW1);})]),
   
 //3rd row
-IconButton(iconSize: 75, onPressed:(){send(STOP);},
-  icon: Icon(Icons.hexagon,
-  color: Colors.red)),
+IconButton(iconSize: 75, onPressed:(){ ble.send(STOP);},
+icon: Icon(Icons.hexagon, color: Colors.red)),
   
 //4th row
 Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
 children: [
-  IconButton(iconSize: 75, onPressed:(){send(LEFT);},
+  IconButton(iconSize: 75, onPressed:(){ ble.send(LEFT);},
     icon: Icon(Icons.arrow_back_rounded)),
-  IconButton(iconSize: 75, onPressed:(){send(CENTER);},
+  IconButton(iconSize: 75, onPressed:(){ ble.send(CENTER);},
     icon: Icon(Icons.compare_arrows)),
-  IconButton(iconSize: 75, onPressed:(){send(RIGHT);},
+  IconButton(iconSize: 75, onPressed:(){ ble.send(RIGHT);},
     icon: Icon(Icons.arrow_forward_rounded)),    
 ]),
 
 // 5th row
-IconButton(iconSize: 75, onPressed:(){send(BACK);},
+IconButton(iconSize: 75, onPressed:(){ ble.send(BACK);},
 icon: Icon(Icons.arrow_circle_down)),
     
 //6th row
 IconButton(iconSize: 100, onPressed:() async {
-  send(STOP);
-  send(CENTER);
-  await device.disconnect();
+  ble.send(STOP);
+  ble.send(CENTER);
+  ble.disconnect();
   SystemNavigator.pop();},
-  icon: Icon(Icons.power_settings_new))
-           
+  icon: Icon(Icons.power_settings_new))      
+        
 ]));}}
-    
+      
