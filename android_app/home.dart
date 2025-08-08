@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
 import './ble_controller.dart';
+import './my_dialog.dart';
 
 TextStyle connectedStyle = TextStyle(
 color:Colors.green,fontSize: 26,
@@ -16,13 +17,33 @@ fontWeight: FontWeight.bold);
 
 class Home extends StatelessWidget{
 
-  final ble = Get.put(BleController());
+final ble = Get.put(BleController());
   
-  @override Widget build(BuildContext context){
-    return Scaffold(
-      appBar: AppBar(title: Text('ble rc boat')),
-      body: Column(spacing: 30, mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+@override Widget build(BuildContext context){
+return Scaffold(
+
+// scaffold appbar
+appBar: AppBar(
+backgroundColor: Colors.transparent,
+elevation: 0,
+title: Text('ble rc boat'),
+actions: [
+
+// first icon on the app bar
+IconButton(icon: Icon(Icons.help, color: Colors.purple),
+onPressed:(){ showDialog(context: context,
+  builder: (context) => MyDialog());}),
+  
+// second icon on the app bar
+IconButton(icon: Icon(Icons.power_settings_new, color: Colors.teal),
+onPressed:() async { ble.send(STOP); ble.send(CENTER); ble.disconnect();
+  SystemNavigator.pop();})
+  
+]),
+ 
+// scaffold body column    
+body: Column(spacing: 30, mainAxisAlignment: MainAxisAlignment.center,
+  children: [
      
 //1st row
 GetX<BleController>(
@@ -62,7 +83,7 @@ IconButton(iconSize: 75, onPressed:(){ ble.send(BACK);},
 icon: Icon(Icons.arrow_circle_down)),
     
 //6th row
-IconButton(iconSize: 100, onPressed:() async {
+IconButton(iconSize: 50, onPressed:() async {
   ble.send(STOP);
   ble.send(CENTER);
   ble.disconnect();
