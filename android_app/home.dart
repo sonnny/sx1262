@@ -4,6 +4,7 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
 import './ble_controller.dart';
 import './my_dialog.dart';
+import './switch_controller.dart';
 
 TextStyle connectedStyle = TextStyle(
 color:Colors.green,fontSize: 26,
@@ -20,6 +21,7 @@ class Home extends StatelessWidget{
 final ble = Get.put(BleController());
   
 @override Widget build(BuildContext context){
+final SwitchController switchController = Get.put(SwitchController());
 return Scaffold(
 
 // scaffold appbar
@@ -29,12 +31,17 @@ elevation: 0,
 title: Text('ble rc boat'),
 actions: [
 
-// first icon on the app bar
+Obx(() => Switch(value: switchController.isSwitched.value,
+onChanged: (value) {switchController.toggleSwitch(value);})),
+
+SizedBox(width:20.0),
+
 IconButton(icon: Icon(Icons.help, color: Colors.purple),
 onPressed:(){ showDialog(context: context,
   builder: (context) => MyDialog());}),
-  
-// second icon on the app bar
+
+SizedBox(width:20.0),
+
 IconButton(icon: Icon(Icons.power_settings_new, color: Colors.teal),
 onPressed:() async { ble.send(STOP); ble.send(CENTER); ble.disconnect();
   SystemNavigator.pop();})
@@ -70,12 +77,16 @@ icon: Icon(Icons.hexagon, color: Colors.red)),
 //4th row
 Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
 children: [
-  IconButton(iconSize: 75, onPressed:(){ ble.send(LEFT);},
-    icon: Icon(Icons.arrow_back_rounded)),
-  IconButton(iconSize: 75, onPressed:(){ ble.send(CENTER);},
-    icon: Icon(Icons.compare_arrows)),
-  IconButton(iconSize: 75, onPressed:(){ ble.send(RIGHT);},
-    icon: Icon(Icons.arrow_forward_rounded)),    
+
+IconButton(iconSize: 75, onPressed:(){ if (switchController.isSwitched.value) {ble.send(LEFT);} else {ble.send(RIGHT);}},
+icon: Icon(Icons.arrow_back_rounded)),
+
+IconButton(iconSize: 75, onPressed:(){ ble.send(CENTER);},
+icon: Icon(Icons.compare_arrows)),
+    
+IconButton(iconSize: 75, onPressed:(){ if (switchController.isSwitched.value) {ble.send(RIGHT);} else {ble.send(LEFT);}},
+icon: Icon(Icons.arrow_forward_rounded)),
+    
 ]),
 
 // 5th row

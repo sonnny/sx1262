@@ -15,7 +15,7 @@ class MyDialog extends StatelessWidget {
               padding: const EdgeInsets.all(20.0),
               child: Text(
              
-"Make sure your phone's bluetooth is on\nAdd location in AndroidManifest.xml\nGo to settings then allow this app \nlocation permission \nCheckout flutter_blue_plus plugin\nfor more info on the manifest file",
+"Make sure your phone's bluetooth is on\nAdd location in AndroidManifest.xml\nGo to settings then allow this app \nlocation permission \nCheckout flutter_blue_plus plugin\nfor more info on the manifest file\nuse the switch to reverse rudder direction",
                 
                 textAlign: TextAlign.center,
               ),

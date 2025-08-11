@@ -41,6 +41,9 @@ irq_set_exclusive_handler(UART1_IRQ,on_uart_rx);
 irq_set_enabled(UART1_IRQ,true);
 uart_set_irq_enables(uart1,true,false);//enable rx interrupt only
 
+gpio_put(ANTENNA,0); // antenna low on transmit, high on receive
+                     // don't forget to change if using half duplex
+
 for(;;){
  if(UART_TO_SEND){
    transmit(uart_buffer,strlen(uart_buffer));

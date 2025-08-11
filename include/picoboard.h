@@ -13,6 +13,7 @@
 #define RESET   23
 #define DIO_1   16
 #define BUSY    18
+#define ANTENNA 17
 
 void init_pico();
 

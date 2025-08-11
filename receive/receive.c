@@ -18,6 +18,9 @@ void main(){
   init_servo();
   if(init_board() > 0) printf("board init...\r\n");
   sleep_ms(1000);
+  
+  gpio_put(ANTENNA,1); // antenna high on receive only, low on transmit
+                       // don't forget to change for transmit if using half duplex
   setModeReceive();
   
   for(;;){
