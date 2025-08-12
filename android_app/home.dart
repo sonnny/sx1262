@@ -42,9 +42,9 @@ onPressed:(){ showDialog(context: context,
 
 SizedBox(width:20.0),
 
-IconButton(icon: Icon(Icons.power_settings_new, color: Colors.teal),
-onPressed:() async { ble.send(STOP); ble.send(CENTER); ble.disconnect();
-  SystemNavigator.pop();})
+IconButton(icon: Icon(Icons.lightbulb), onPressed:(){
+Get.isDarkMode ? Get.changeThemeMode(ThemeMode.light)
+               : Get.changeThemeMode(ThemeMode.dark);})
   
 ]),
  
