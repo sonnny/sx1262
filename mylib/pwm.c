@@ -10,13 +10,8 @@ pwm_set_chan_level(1,PWM_CHAN_B,0);
 pwm_set_enabled(1,true);
 }
 
-void forward_slow(){
-pwm_set_chan_level(1,PWM_CHAN_A,500);
-pwm_set_chan_level(1,PWM_CHAN_B,0);
-}
-
 void forward(int speed){
-pwm_set_chan_level(1,PWM_CHAN_A,speed * 1000);
+pwm_set_chan_level(1,PWM_CHAN_A,speed);
 pwm_set_chan_level(1,PWM_CHAN_B,0);
 }
 
@@ -25,9 +20,9 @@ pwm_set_chan_level(1,PWM_CHAN_A,0);
 pwm_set_chan_level(1,PWM_CHAN_B,0);
 }
 
-void reverse(){
+void reverse(int speed){
 pwm_set_chan_level(1,PWM_CHAN_A,0);
-pwm_set_chan_level(1,PWM_CHAN_B,1000);
+pwm_set_chan_level(1,PWM_CHAN_B,speed);
 }
 
 

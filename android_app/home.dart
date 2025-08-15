@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import './ble_controller.dart';
 import './my_dialog.dart';
 import './switch_controller.dart';
+import './source_code.dart';
 
 TextStyle connectedStyle = TextStyle(
 color:Colors.green,fontSize: 26,
@@ -94,12 +95,21 @@ IconButton(iconSize: 75, onPressed:(){ ble.send(BACK);},
 icon: Icon(Icons.arrow_circle_down)),
     
 //6th row
+Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+children: [
+
+IconButton(iconSize: 40, onPressed:(){Get.to(() => SourceCode());},
+icon: Icon(Icons.comment)),
+
+
 IconButton(iconSize: 50, onPressed:() async {
   ble.send(STOP);
   ble.send(CENTER);
   ble.disconnect();
   SystemNavigator.pop();},
-  icon: Icon(Icons.power_settings_new))      
+  icon: Icon(Icons.power_settings_new))
+  
+])      
         
 ]));}}
       
